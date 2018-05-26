@@ -1,0 +1,23 @@
+{
+  "name": "lambda-typescript-starter",
+  "version": "1.0.0",
+  "description": "Project Starter for AWS Lambda with typescript using Serverless Framework",
+  "main": "handler.js",
+  "scripts": {
+    "build": "npm run build-ts && npm run tslint",
+    "build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
+    "watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wahyu Sumartha",
+  "license": "MIT",
+  "dependencies": {
+    "serverless": "^1.27.3"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.5",
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.3"
+  }
+}
