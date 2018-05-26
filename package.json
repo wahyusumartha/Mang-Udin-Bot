@@ -8,7 +8,7 @@
     "build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
     "watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Wahyu Sumartha",
   "license": "MIT",
@@ -17,6 +17,9 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.5",
+    "@types/jest": "^22.2.3",
+    "jest": "^23.0.0",
+    "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   }
