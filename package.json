@@ -1,5 +1,5 @@
 {
-  "name": "Mang-Udin",
+  "name": "mang-udin",
   "version": "1.0.0",
   "description": "This is a bot that will send you a gently reminder that you need to do daily standup",
   "main": "handler.js",
