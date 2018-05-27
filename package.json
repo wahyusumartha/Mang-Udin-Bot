@@ -1,7 +1,7 @@
 {
-  "name": "lambda-typescript-starter",
+  "name": "Mang-Udin",
   "version": "1.0.0",
-  "description": "Project Starter for AWS Lambda with typescript using Serverless Framework",
+  "description": "This is a bot that will send you a gently reminder that you need to do daily standup",
   "main": "handler.js",
   "scripts": {
     "build": "npm run build-ts && npm run tslint",
