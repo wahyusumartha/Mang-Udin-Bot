@@ -4,6 +4,7 @@
   "description": "This is a bot that will send you a gently reminder that you need to do daily standup",
   "main": "handler.js",
   "scripts": {
+    "deploy": "npm run build && serverless deploy",
     "build": "npm run build-ts && npm run tslint",
     "build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
     "watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
