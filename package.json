@@ -13,11 +13,13 @@
   "author": "Wahyu Sumartha",
   "license": "MIT",
   "dependencies": {
-    "serverless": "^1.27.3"
+    "serverless": "^1.27.3",
+    "js-yaml": "^3.11.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.5",
     "@types/jest": "^22.2.3",
+    "@types/js-yaml": "^3.11.1",
     "jest": "^23.0.0",
     "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",

@@ -6,7 +6,7 @@ jspm_packages
 .serverless
 
 # Ignore env yml file 
-.env.yml
+env.yml
 
 # Ignore output of typescript files
 dist
