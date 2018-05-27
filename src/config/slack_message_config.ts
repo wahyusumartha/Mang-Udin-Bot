@@ -1,7 +1,14 @@
 import * as jsyaml from "js-yaml"
 import * as fs from "fs"
 
+/**
+ * An Object that will load needed configuration value
+ */
 export class Configurator {
+	/**
+	 * Load YML Configuration that needed to communicate with slack api
+	 * @returns The Interface that define for all configuration that related with slack
+	 */
 	getSlackConfig(): SlackConfig {
 		const yamlDocument = this.loadConfiguration()
 		return {
