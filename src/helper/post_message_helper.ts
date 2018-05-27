@@ -18,7 +18,7 @@ const PostMessageHelper = async (
 	const channel = configurator.getSlackConfig().channel
 	const channelName = configurator.getSlackConfig().channelName
 	const client = new SlackClient(token)
-	const members = await retrieveGroupInfo(context, channel, client)
+	const members = await retrieveMembers(context, channel, client)
 	members.forEach(memberId => {
 		const message = new MessageTemplate().botMangUdinMessage(
 			memberId,
@@ -65,7 +65,7 @@ async function sendReminder(
  * @param channelId		The channel ID that will be retrieved to get an array of member ID
  * @param client			The slack WebClient Object that will be used to retrieve private channel information
  */
-async function retrieveGroupInfo(
+async function retrieveMembers(
 	context: Context,
 	channelId: string,
 	client: SlackClient
