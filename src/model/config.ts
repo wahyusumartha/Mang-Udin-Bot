@@ -1,5 +1,5 @@
 interface SlackConfig {
-  token: string
-  channel: string
-  channelName: string
+	token: string
+	channel: string
+	channelName: string
 }
