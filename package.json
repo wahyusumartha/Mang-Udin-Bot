@@ -14,8 +14,9 @@
   "author": "Wahyu Sumartha",
   "license": "MIT",
   "dependencies": {
-    "serverless": "^1.27.3",
-    "js-yaml": "^3.11.0"
+    "@slack/client": "^4.2.2",
+    "js-yaml": "^3.11.0",
+    "serverless": "^1.27.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.5",
