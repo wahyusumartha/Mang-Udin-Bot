@@ -13,19 +13,20 @@ const PostMessageHelper = async (
 	context: Context,
 	callback: Callback
 ) => {
-	const configurator = new Configurator()
-	const token = configurator.getSlackConfig().token
+	const configurator = new Configurator("env.yml")
+	const authToken = configurator.getSlackConfig().authToken
 	const channel = configurator.getSlackConfig().channel
 	const channelName = configurator.getSlackConfig().channelName
-	const client = new SlackClient(token)
+	const client = new SlackClient(authToken)
 	const members = await retrieveMembers(context, channel, client)
-	members.forEach(memberId => {
+	members.forEach(async (memberId) => {
 		const message = new MessageTemplate().botMangUdinMessage(
 			memberId,
 			channel,
 			channelName
 		)
-		sendReminder(client, memberId, message, context, callback)
+		const channelId = await client.openConversation(memberId)
+		sendReminder(client, channelId, message, context, callback)
 	})
 }
 
@@ -39,16 +40,16 @@ const PostMessageHelper = async (
  */
 async function sendReminder(
 	client: SlackClient,
-	userId: string,
+	channelId: string,
 	message: string,
 	context: Context,
 	callback: Callback
 ) {
 	const slackMessage = {
 		message: message,
-		channel: userId,
+		channel: channelId,
 		username: "Mang Udin",
-		as_user: true
+		as_user: false
 	}
 
 	const response = await client.sendMessage(slackMessage)

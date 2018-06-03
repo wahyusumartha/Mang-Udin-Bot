@@ -1,4 +1,4 @@
-import { WebClient, WebAPICallResult, WebAPICallError } from "@slack/client"
+import { WebClient, RTMClient, WebAPICallResult, WebAPICallError } from "@slack/client"
 
 /**
  * An Object that will communicate to slack api
@@ -9,7 +9,7 @@ export class SlackClient {
 	/**
 	 * A constructor for an object that has function to
 	 * communicate with slack api
-	 * @param token an authentication token from slack server
+	 * @param token an access token from slack server
 	 */
 	constructor(token: string) {
 		this.token = token
@@ -22,7 +22,8 @@ export class SlackClient {
 	async sendMessage(slackMessage: SlackMessage): Promise<WebAPICallResult> {
 		const response = await this.webClient().chat.postMessage({
 			text: slackMessage.message,
-			channel: slackMessage.channel
+			channel: slackMessage.channel,
+			as_user: slackMessage.as_user
 		})
 		return response
 	}
@@ -44,5 +45,12 @@ export class SlackClient {
 	 */
 	private webClient(): WebClient {
 		return new WebClient(this.token)
+	}
+
+	async openConversation(users: string): Promise<string> {
+		const response = await this.webClient().conversations.open({
+			users: users
+		})
+		return (response as any).channel.id
 	}
 }
