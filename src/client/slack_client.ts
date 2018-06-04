@@ -1,4 +1,4 @@
-import { WebClient, RTMClient, WebAPICallResult, WebAPICallError } from "@slack/client"
+import { WebClient, WebAPICallResult, WebAPICallError } from "@slack/client"
 
 /**
  * An Object that will communicate to slack api
