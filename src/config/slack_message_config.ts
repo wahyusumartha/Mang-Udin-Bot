@@ -17,8 +17,9 @@ export class Configurator {
 	getSlackConfig(): SlackConfig {
 		const yamlDocument = this.loadConfiguration()
 		return {
-			authToken: yamlDocument.slack.auth_token,
+			oauthToken: yamlDocument.slack.oauth_token,
 			botToken: yamlDocument.slack.bot_token,
+			verificationToken: yamlDocument.slack.verification_token,
 			channel: yamlDocument.slack.channel_destination,
 			channelName: yamlDocument.slack.channel_name
 		}

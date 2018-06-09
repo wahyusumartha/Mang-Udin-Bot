@@ -15,7 +15,7 @@ describe("Slack Message Configuration", () => {
 		})
 
 		it("should return correct auth token", () => {
-			expect(configurator.getSlackConfig().authToken).toEqual(
+			expect(configurator.getSlackConfig().oauthToken).toEqual(
 				"<YOUR_OAUTH_ACCESS_TOKEN>"
 			)
 		})

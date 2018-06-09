@@ -5,7 +5,6 @@ import { WebClient, WebAPICallResult, WebAPICallError } from "@slack/client"
  */
 export class SlackClient {
 	private token: string
-
 	/**
 	 * A constructor for an object that has function to
 	 * communicate with slack api
