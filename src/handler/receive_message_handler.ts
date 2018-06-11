@@ -7,9 +7,7 @@ import { Context, Callback } from "aws-lambda"
  * @param callback 	The aws-lambda callback for given process
  */
 const receiveMessage = (event: any, context: Context, callback: Callback) => {
-	console.log(`Event sent from Slack ${JSON.stringify(event)}`)
 	const eventBody = JSON.parse(event.body)
-	console.log({json_parser: eventBody})
 	const response = {
 		statusCode: 200,
 		headers: {"Content-Type": "text/plain"},
