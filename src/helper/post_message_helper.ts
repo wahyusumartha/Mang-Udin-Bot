@@ -15,9 +15,11 @@ const PostMessageHelper = async (
 ) => {
 	const configurator = new Configurator("env.yml")
 	const authToken = configurator.getSlackConfig().authToken
+	const botToken = configurator.getSlackConfig().botToken
 	const channel = configurator.getSlackConfig().channel
 	const channelName = configurator.getSlackConfig().channelName
 	const client = new SlackClient(authToken)
+	const botClient = new SlackClient(botToken)
 	const members = await retrieveMembers(context, channel, client)
 	members.forEach(async (memberId) => {
 		const message = new MessageTemplate().botMangUdinMessage(
@@ -25,8 +27,8 @@ const PostMessageHelper = async (
 			channel,
 			channelName
 		)
-		const channelId = await client.openConversation(memberId)
-		sendReminder(client, channelId, message, context, callback)
+		const channelId = await botClient.openConversation(memberId)
+		sendReminder(botClient, channelId, message, context, callback)
 	})
 }
 
