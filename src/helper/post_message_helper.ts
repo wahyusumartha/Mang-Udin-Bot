@@ -8,9 +8,7 @@ import { MessageTemplate, Configurator } from "../config/slack_message_config"
  * @param context		The aws-lambda context
  * @param callback	The aws-lambda callback from the result of the process
  */
-const PostMessageHelper = async (
-	callback: Callback
-) => {
+const PostMessageHelper = async (callback: Callback) => {
 	const configurator = new Configurator("env.yml")
 	const authToken = configurator.getSlackConfig().authToken
 	const botToken = configurator.getSlackConfig().botToken
@@ -19,7 +17,7 @@ const PostMessageHelper = async (
 	const client = new SlackClient(authToken)
 	const botClient = new SlackClient(botToken)
 	const members = await retrieveMembers(channel, client)
-	members.forEach(async (memberId) => {
+	members.forEach(async memberId => {
 		const message = new MessageTemplate().botMangUdinMessage(
 			memberId,
 			channel,
