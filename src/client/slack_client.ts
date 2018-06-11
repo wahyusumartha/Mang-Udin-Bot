@@ -1,11 +1,10 @@
-import { WebClient, RTMClient, WebAPICallResult, WebAPICallError } from "@slack/client"
+import { WebClient, WebAPICallResult, WebAPICallError } from "@slack/client"
 
 /**
  * An Object that will communicate to slack api
  */
 export class SlackClient {
 	private token: string
-
 	/**
 	 * A constructor for an object that has function to
 	 * communicate with slack api

@@ -14,7 +14,7 @@ const PostMessageHelper = async (
 	callback: Callback
 ) => {
 	const configurator = new Configurator("env.yml")
-	const authToken = configurator.getSlackConfig().authToken
+	const authToken = configurator.getSlackConfig().oauthToken
 	const botToken = configurator.getSlackConfig().botToken
 	const channel = configurator.getSlackConfig().channel
 	const channelName = configurator.getSlackConfig().channelName

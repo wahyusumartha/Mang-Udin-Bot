@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@slack/client": "^4.2.2",
+    "@slack/events-api": "^1.0.1",
     "js-yaml": "^3.11.0",
     "serverless": "^1.27.3"
   },

@@ -1,6 +1,7 @@
 interface SlackConfig {
 	botToken: string
-	authToken: string
+	oauthToken: string
+	verificationToken: string
 	channel: string
 	channelName: string
 }
