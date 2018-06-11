@@ -9,8 +9,6 @@ import { MessageTemplate, Configurator } from "../config/slack_message_config"
  * @param callback	The aws-lambda callback from the result of the process
  */
 const PostMessageHelper = async (
-	event: any,
-	context: Context,
 	callback: Callback
 ) => {
 	const configurator = new Configurator("env.yml")
@@ -20,7 +18,7 @@ const PostMessageHelper = async (
 	const channelName = configurator.getSlackConfig().channelName
 	const client = new SlackClient(authToken)
 	const botClient = new SlackClient(botToken)
-	const members = await retrieveMembers(context, channel, client)
+	const members = await retrieveMembers(channel, client)
 	members.forEach(async (memberId) => {
 		const message = new MessageTemplate().botMangUdinMessage(
 			memberId,
@@ -28,7 +26,7 @@ const PostMessageHelper = async (
 			channelName
 		)
 		const channelId = await botClient.openConversation(memberId)
-		sendReminder(botClient, channelId, message, context, callback)
+		sendReminder(botClient, channelId, message, callback)
 	})
 }
 
@@ -44,7 +42,6 @@ async function sendReminder(
 	client: SlackClient,
 	channelId: string,
 	message: string,
-	context: Context,
 	callback: Callback
 ) {
 	const slackMessage = {
@@ -69,7 +66,6 @@ async function sendReminder(
  * @param client			The slack WebClient Object that will be used to retrieve private channel information
  */
 async function retrieveMembers(
-	context: Context,
 	channelId: string,
 	client: SlackClient
 ): Promise<string[]> {

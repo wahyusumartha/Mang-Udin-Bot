@@ -8,7 +8,7 @@ import { PostMessageHelper } from "../helper/post_message_helper"
  * @param callback 	The aws-lambda callback for given process
  */
 const postMessage = (event: any, context: Context, callback: Callback) => {
-	PostMessageHelper(event, context, callback)
+	PostMessageHelper(callback)
 }
 
 export { postMessage }
