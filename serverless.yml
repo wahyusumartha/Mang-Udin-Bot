@@ -62,6 +62,15 @@ functions:
     events:
       - schedule: cron(0 03 ? * MON-FRI *)
 
+  slack-event-hook:
+    handler: dist/handler/receive_message_handler.receiveMessage
+    memorySize: 1024
+    timeout: 60
+    events:
+      - http:
+          path: /slack-hook
+          method: post
+
 plugins:
 
 custom:
