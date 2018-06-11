@@ -60,13 +60,13 @@ functions:
     memorySize: 1024
     timeout: 60
     events:
-      - schedule: cron(0 03 ? * MON-FRI *) 
+      - schedule: cron(0 03 ? * MON-FRI *)
 
 plugins:
 
 custom:
   webpackIncludeModules:
     packagePath: './package.json'
-	
+
 package:
   excludeDevDependencies: false
