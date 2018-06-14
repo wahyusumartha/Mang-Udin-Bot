@@ -16,6 +16,11 @@
   "dependencies": {
     "@slack/client": "^4.2.2",
     "js-yaml": "^3.11.0",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "reflect-metadata": "^0.1.12",
+    "sequelize": "^4.37.10",
+    "sequelize-typescript": "^0.6.6-beta.1",
     "serverless": "^1.27.3"
   },
   "devDependencies": {
