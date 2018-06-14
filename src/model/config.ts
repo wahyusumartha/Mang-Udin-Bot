@@ -4,3 +4,12 @@ interface SlackConfig {
 	channel: string
 	channelName: string
 }
+
+interface PostgresConfig {
+	host: string
+	port: number
+	database: string
+	username: string
+	password: string
+	maxPool: number
+}

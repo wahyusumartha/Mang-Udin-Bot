@@ -24,6 +24,13 @@ provider:
 # you can overwrite defaults here
   stage: dev
   region: us-east-1
+  environment:
+    DB_HOST: ${file(./env.yml):postgresql.${self:provider.stage}.host}
+    DB_PORT: ${file(./env.yml):postgresql.${self:provider.stage}.port}
+    DB_USERNAME: ${file(./env.yml):postgresql.${self:provider.stage}.username}
+    DB_PASSWORD: ${file(./env.yml):postgresql.${self:provider.stage}.password}
+    DB_DATABASE: ${file(./env.yml):postgresql.${self:provider.stage}.database}
+    DB_MAX_POOL: ${file(./env.yml):postgresql.${self:provider.stage}.max_pool}
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
