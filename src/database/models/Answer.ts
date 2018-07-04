@@ -9,7 +9,9 @@ import {
 } from "sequelize-typescript"
 import { Question } from "./Question"
 
-@Table
+@Table({
+	timestamps: true
+})
 export class Answer extends Model<Answer> {
 	@AllowNull(false)
 	@Column
