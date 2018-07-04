@@ -5,7 +5,13 @@ import { QuestionPersistentModel } from "../../model/persistent/persistent_type"
 
 interface QuestionHandler {
 	getQuestions(): Promise<Question[]>
-	getQuestionById(questionId: number): Promise<Question[]>
+	getQuestionById(questionId: number): Promise<Question>
+	saveQuestion(questionModel: QuestionPersistentModel): Promise<Question>
+	updateQuestion(
+		questionId: number,
+		questionModel: QuestionPersistentModel
+	): Promise<[number, Question[]]>
+	deleteQuestion(questionId: number): Promise<number>
 }
 
 export class QuestionDAO implements QuestionHandler {
