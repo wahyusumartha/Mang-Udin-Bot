@@ -6,6 +6,12 @@ import { AnswerPersistentModel } from "../../model/persistent/persistent_type"
 interface AnswerHandler {
 	getAnswers(): Promise<Answer[]>
 	getAnswerById(answerId: number): Promise<Answer>
+	saveAnswer(answerModel: AnswerPersistentModel): Promise<Answer>
+	updateAnswer(
+		answerId: number,
+		answerModel: AnswerPersistentModel
+	): Promise<[number, Answer[]]>
+	deleteAnswer(answerId: number): Promise<number>
 }
 
 export class AnswerDAO implements AnswerHandler {
