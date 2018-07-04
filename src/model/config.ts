@@ -11,5 +11,6 @@ interface PostgresConfig {
 	database: string
 	username: string
 	password: string
+	dialect: string
 	maxPool: number
 }
