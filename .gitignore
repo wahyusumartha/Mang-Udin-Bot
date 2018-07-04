@@ -5,8 +5,14 @@ jspm_packages
 # Serverless directories
 .serverless
 
-# Ignore env yml file 
+# Ignore env yml file
 env.yml
+
+# Ignore .vs folder
+.vs
+
+# Ignore config.json file
+config.json
 
 # Ignore output of typescript files
 dist
