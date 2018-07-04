@@ -22,16 +22,22 @@ export class QuestionDAO implements QuestionHandler {
 	}
 
 	async getQuestions(): Promise<Question[]> {
+		const sequelize = this.databaseConfigurator.getSequelize()
 		const questions = await Question.findAll({ include: [Answer] })
+		sequelize.close()
 		return questions
 	}
 
-	async getQuestionById(questionId: number): Promise<Question[]> {
-		const questions = await Question.findAll({ include: [Answer] })
-		return questions
+	async getQuestionById(questionId: number): Promise<Question> {
+		const sequelize = this.databaseConfigurator.getSequelize()
+		const question = await Question.findOne({ where: { id: questionId } })
+		sequelize.close()
+		return question
 	}
 
-	async saveQuestion(questionModel: QuestionPersistentModel): Promise<Question> {
+	async saveQuestion(
+		questionModel: QuestionPersistentModel
+	): Promise<Question> {
 		const sequelize = this.databaseConfigurator.getSequelize()
 		const question = Question.build({
 			questionText: questionModel.questionText,
