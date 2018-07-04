@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "<POSTGRESQL_USERNAME_DEVELOPMENT>",
+    "password": "<POSTGRESQL_PASSWORD_DEVELOPMENT>",
+    "database": "<POSTGRESQL_DATABASE_DEVELOPMENT>",
+    "host": "<POSTGRESQL_HOST_DEVELOPMENT>",
+    "dialect": "<POSTGRESQL_DIALECT_DEVELOPMENT>"
+  },
+  "test": {
+    "username": "<POSTGRESQL_USERNAME_TEST>",
+    "password": "<POSTGRESQL_PASSWORD_TEST>",
+    "database": "<POSTGRESQL_DATABASE_TEST>",
+    "host": "<POSTGRESQL_HOST_TEST>",
+    "dialect": "<POSTGRESQL_DIALECT_TEST>"
+  },
+  "production": {
+    "username": "<POSTGRESQL_USERNAME_PRODUCTION>",
+    "password": "<POSTGRESQL_PASSWORD_PRODUCTION>",
+    "database": "<POSTGRESQL_DATABASE_PRODUCTION>",
+    "host": "<POSTGRESQL_HOST_PRODUCTION>",
+    "dialect": "<POSTGRESQL_DIALECT_PRODUCTION>"
+  }
+}
