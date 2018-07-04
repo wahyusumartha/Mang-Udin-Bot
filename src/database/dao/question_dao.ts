@@ -47,4 +47,23 @@ export class QuestionDAO implements QuestionHandler {
 		sequelize.close()
 		return savedQuestion
 	}
+
+	async updateQuestion(
+		questionId: number,
+		questionModel: QuestionPersistentModel
+	): Promise<[number, Question[]]> {
+		const sequelize = this.databaseConfigurator.getSequelize()
+		const updatedQuestion = await Question.update(questionModel, {
+			where: { id: questionId }
+		})
+		sequelize.close()
+		return updatedQuestion
+	}
+
+	async deleteQuestion(questionid: number): Promise<number> {
+		const sequelize = this.databaseConfigurator.getSequelize()
+		const isDeleted = await Question.destroy({ where: { id: questionid } })
+		sequelize.close()
+		return isDeleted
+	}
 }
