@@ -6,14 +6,16 @@ import {
 	QuestionPersistentModel,
 	AnswerPersistentModel
 } from "../model/persistent/persistent_type"
+import { JSONReader, Environment } from "../helper/test/file_manager"
 
 describe("Answer DAO", () => {
+	const dbConfig = new JSONReader(Environment.Test).read("config.json")
 	const databaseConfigurator: DatabaseConfigurator = new DatabaseConfigurator(
-		"127.0.0.1",
-		"mangudin-db",
-		"mangudin",
-		"mamangudin",
-		"postgres"
+		dbConfig.host,
+		dbConfig.database,
+		dbConfig.username,
+		dbConfig.password,
+		dbConfig.dialect
 	)
 
 	let savedAnswer: Answer
@@ -24,7 +26,7 @@ describe("Answer DAO", () => {
 
 	afterEach(async () => {
 		const sequelize = databaseConfigurator.getSequelize()
-		await sequelize.truncate()
+		await sequelize.truncate({ cascade: true })
 		sequelize.close()
 	})
 
