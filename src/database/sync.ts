@@ -32,8 +32,8 @@ const sequelize = dbConfigurator.getSequelize()
 sequelize
 	.sync()
 	.then(() => {
-		process.exit(1)
+		process.exit()
 	})
 	.catch(() => {
-		process.exit(1)
+		process.exit()
 	})
