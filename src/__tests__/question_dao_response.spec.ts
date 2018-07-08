@@ -1,17 +1,17 @@
 import { DatabaseConfigurator } from "../database/database_configurator"
 import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
-import {
-	QuestionPersistentModel
-} from "../model/persistent/persistent_type"
+import { QuestionPersistentModel } from "../model/persistent/persistent_type"
+import { JSONReader, Environment } from "../helper/test/file_manager"
 
 describe("Question DAO", () => {
+	const dbConfig = new JSONReader(Environment.Test).read("config.json")
 	const databaseConfigurator: DatabaseConfigurator = new DatabaseConfigurator(
-		"127.0.0.1",
-		"mangudin-db",
-		"mangudin",
-		"mamangudin",
-		"postgres"
+		dbConfig.host,
+		dbConfig.database,
+		dbConfig.username,
+		dbConfig.password,
+		dbConfig.dialect
 	)
 
 	let savedQuestion: Question
@@ -22,7 +22,7 @@ describe("Question DAO", () => {
 
 	afterEach(async () => {
 		const sequelize = databaseConfigurator.getSequelize()
-		await sequelize.truncate()
+		await sequelize.truncate({ cascade: true })
 		sequelize.close()
 	})
 
