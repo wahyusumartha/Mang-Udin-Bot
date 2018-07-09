@@ -30,7 +30,7 @@ const dbConfigurator = new DatabaseConfigurator(
 )
 const sequelize = dbConfigurator.getSequelize()
 sequelize
-	.sync({ force: true })
+	.sync({ alter: true })
 	.then(() => {
 		process.exit()
 	})
