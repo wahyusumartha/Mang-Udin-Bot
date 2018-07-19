@@ -1,6 +1,7 @@
 import { AnswerDAO } from "../database/dao/answer_dao"
 import { DatabaseConfigurator } from "../database/database_configurator"
 import { Answer } from "../database/models/Answer"
+import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
 import {
 	QuestionPersistentModel,
@@ -18,20 +19,19 @@ describe("Answer DAO", () => {
 		dbConfig.dialect
 	)
 
+	let sequelize: any
 	let savedAnswer: Answer
 
 	beforeEach(async () => {
-		savedAnswer = await prepareData()
+		await sequelizeOpen()
 	})
 
 	afterEach(async () => {
-		const sequelize = databaseConfigurator.getSequelize()
-		await sequelize.truncate({ cascade: true })
-		sequelize.close()
+		await sequelizeClose()
 	})
 
 	test("Get Answer By ID", async () => {
-		const answerDAO = new AnswerDAO(databaseConfigurator)
+		const answerDAO = new AnswerDAO()
 		const answer = await answerDAO.getAnswerById(savedAnswer.id)
 		expect(answer).not.toBeNull()
 		expect(answer.slackId).toEqual("1")
@@ -42,13 +42,22 @@ describe("Answer DAO", () => {
 	})
 
 	test("Save and Retrieve Answer Data", async () => {
-		const answerDAO = new AnswerDAO(databaseConfigurator)
-		const allAnswerData = await answerDAO.getAnswers()
-		expect(allAnswerData.length).toEqual(1)
+		const answerDAO = new AnswerDAO()
+		const answerPersistentModel: AnswerPersistentModel = {
+			slackId: "1",
+			slackMessageId: "1",
+			answerText: "Answer Text",
+			questionId: savedAnswer.questionId
+		}
+		const answerData = await answerDAO.saveAnswer(answerPersistentModel)
+		if (answerData) {
+			const allAnswerData = await answerDAO.getAnswers()
+			expect(allAnswerData.length).toEqual(2)
+		}
 	})
 
 	test("Update Answer Data", async () => {
-		const answerDAO = new AnswerDAO(databaseConfigurator)
+		const answerDAO = new AnswerDAO()
 		const newAnswerData: AnswerPersistentModel = {
 			slackId: "2",
 			slackMessageId: "2",
@@ -63,14 +72,14 @@ describe("Answer DAO", () => {
 	})
 
 	test("Delete Answer Data", async () => {
-		const answerDAO = new AnswerDAO(databaseConfigurator)
+		const answerDAO = new AnswerDAO()
 		const isDeleted = await answerDAO.deleteAnswer(savedAnswer.id)
 		expect(isDeleted).toEqual(1)
 	})
 
 	// Helper Method
 	const prepareData = async (): Promise<Answer> => {
-		const questionDAO = new QuestionDAO(databaseConfigurator)
+		const questionDAO = new QuestionDAO()
 		const questionPersistentModel: QuestionPersistentModel = {
 			questionText: "Question Text",
 			order: 1
@@ -80,7 +89,7 @@ describe("Answer DAO", () => {
 		)
 
 		// save answer based on question
-		const answerDAO = new AnswerDAO(databaseConfigurator)
+		const answerDAO = new AnswerDAO()
 		const answerPersistentModel: AnswerPersistentModel = {
 			slackId: "1",
 			slackMessageId: "1",
@@ -90,5 +99,18 @@ describe("Answer DAO", () => {
 		const savedAnswer = await answerDAO.saveAnswer(answerPersistentModel)
 
 		return savedAnswer
+	}
+
+	const sequelizeOpen = async () => {
+		sequelize = databaseConfigurator.getSequelize()
+		await Answer.destroy({ truncate: true, force: true, cascade: true })
+		await Question.destroy({ truncate: true, force: true, cascade: true })
+		savedAnswer = await prepareData()
+	}
+
+	const sequelizeClose = async () => {
+		await Answer.destroy({ truncate: true, force: true, cascade: true })
+		await Question.destroy({ truncate: true, force: true, cascade: true })
+		sequelize.close()
 	}
 })
