@@ -1,4 +1,5 @@
 import { DatabaseConfigurator } from "../database/database_configurator"
+import { Answer } from "../database/models/Answer"
 import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
 import { QuestionPersistentModel } from "../model/persistent/persistent_type"
@@ -14,20 +15,19 @@ describe("Question DAO", () => {
 		dbConfig.dialect
 	)
 
+	let sequelize: any
 	let savedQuestion: Question
 
 	beforeEach(async () => {
-		savedQuestion = await prepareData()
+		await sequelizeOpen()
 	})
 
 	afterEach(async () => {
-		const sequelize = databaseConfigurator.getSequelize()
-		await sequelize.truncate({ cascade: true })
-		sequelize.close()
+		await sequelizeClose()
 	})
 
 	test("Get Question By ID", async () => {
-		const questionDAO = new QuestionDAO(databaseConfigurator)
+		const questionDAO = new QuestionDAO()
 		const question = await questionDAO.getQuestionById(savedQuestion.id)
 		expect(question).not.toBeNull()
 		expect(question.questionText).toEqual("Question Text")
@@ -35,13 +35,20 @@ describe("Question DAO", () => {
 	})
 
 	test("Save and Retrieve Question Data", async () => {
-		const questionDAO = new QuestionDAO(databaseConfigurator)
-		const allQuestionData = await questionDAO.getQuestions()
-		expect(allQuestionData.length).toEqual(1)
+		const questionDAO = new QuestionDAO()
+		const questionPersistentModel: QuestionPersistentModel = {
+			questionText: "New Question Text",
+			order: 2
+		}
+		const questionData = await questionDAO.saveQuestion(questionPersistentModel)
+		if (questionData) {
+			const allQuestionData = await questionDAO.getQuestions()
+			expect(allQuestionData.length).toEqual(2)
+		}
 	})
 
 	test("Update Question Data", async () => {
-		const questionDAO = new QuestionDAO(databaseConfigurator)
+		const questionDAO = new QuestionDAO()
 		const newQuestionData: QuestionPersistentModel = {
 			questionText: "New Question Text",
 			order: 2
@@ -54,14 +61,14 @@ describe("Question DAO", () => {
 	})
 
 	test("Delete Question Data", async () => {
-		const questionDAO = new QuestionDAO(databaseConfigurator)
+		const questionDAO = new QuestionDAO()
 		const isDeleted = await questionDAO.deleteQuestion(savedQuestion.id)
 		expect(isDeleted).toEqual(1)
 	})
 
 	// Helper Method
 	const prepareData = async (): Promise<Question> => {
-		const questionDAO = new QuestionDAO(databaseConfigurator)
+		const questionDAO = new QuestionDAO()
 		const questionPersistentModel: QuestionPersistentModel = {
 			questionText: "Question Text",
 			order: 1
@@ -70,5 +77,18 @@ describe("Question DAO", () => {
 			questionPersistentModel
 		)
 		return savedQuestion
+	}
+
+	const sequelizeOpen = async () => {
+		sequelize = databaseConfigurator.getSequelize()
+		await Answer.destroy({ truncate: true, force: true, cascade: true })
+		await Question.destroy({ truncate: true, force: true, cascade: true })
+		savedQuestion = await prepareData()
+	}
+
+	const sequelizeClose = async () => {
+		await Answer.destroy({ truncate: true, force: true, cascade: true })
+		await Question.destroy({ truncate: true, force: true, cascade: true })
+		sequelize.close()
 	}
 })
