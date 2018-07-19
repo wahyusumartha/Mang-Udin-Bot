@@ -15,36 +15,21 @@ interface QuestionHandler {
 }
 
 export class QuestionDAO implements QuestionHandler {
-	private databaseConfigurator: DatabaseConfigurator
-
-	constructor(databaseConfigurator: DatabaseConfigurator) {
-		this.databaseConfigurator = databaseConfigurator
-	}
 
 	async getQuestions(): Promise<Question[]> {
-		const sequelize = this.databaseConfigurator.getSequelize()
-		const questions = await Question.findAll({ include: [Answer] })
-		sequelize.close()
+		const questions = await Question.findAll()
 		return questions
 	}
 
 	async getQuestionById(questionId: number): Promise<Question> {
-		const sequelize = this.databaseConfigurator.getSequelize()
 		const question = await Question.findOne({ where: { id: questionId } })
-		sequelize.close()
 		return question
 	}
 
 	async saveQuestion(
 		questionModel: QuestionPersistentModel
 	): Promise<Question> {
-		const sequelize = this.databaseConfigurator.getSequelize()
-		const question = Question.build({
-			questionText: questionModel.questionText,
-			order: questionModel.order
-		})
-		const savedQuestion = await question.save()
-		sequelize.close()
+		const savedQuestion = await Question.create(questionModel)
 		return savedQuestion
 	}
 
@@ -52,18 +37,14 @@ export class QuestionDAO implements QuestionHandler {
 		questionId: number,
 		questionModel: QuestionPersistentModel
 	): Promise<[number, Question[]]> {
-		const sequelize = this.databaseConfigurator.getSequelize()
 		const updatedQuestion = await Question.update(questionModel, {
 			where: { id: questionId }
 		})
-		sequelize.close()
 		return updatedQuestion
 	}
 
 	async deleteQuestion(questionid: number): Promise<number> {
-		const sequelize = this.databaseConfigurator.getSequelize()
 		const isDeleted = await Question.destroy({ where: { id: questionid } })
-		sequelize.close()
 		return isDeleted
 	}
 }
