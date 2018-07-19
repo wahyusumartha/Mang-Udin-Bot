@@ -1,6 +1,4 @@
 import { Question } from "../models/Question"
-import { Answer } from "../models/Answer"
-import { DatabaseConfigurator } from "../database_configurator"
 import { QuestionPersistentModel } from "../../model/persistent/persistent_type"
 
 interface QuestionHandler {
