@@ -31,5 +31,5 @@ export class Answer extends Model<Answer> {
 	questionId: number
 
 	@BelongsTo(() => Question)
-	question: Question[]
+	question: Question
 }
