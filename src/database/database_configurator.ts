@@ -31,7 +31,7 @@ export class DatabaseConfigurator {
 			password: this.password,
 			dialect: this.dialect
 		})
-		sequelize.addModels([Answer, Question])
+		sequelize.addModels([Question, Answer])
 		return sequelize
 	}
 }
