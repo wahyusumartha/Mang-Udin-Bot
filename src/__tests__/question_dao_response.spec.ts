@@ -4,6 +4,7 @@ import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
 import { QuestionPersistentModel } from "../model/persistent/persistent_type"
 import { JSONReader, Environment } from "../helper/test/file_manager"
+import { Sequelize } from "sequelize-typescript";
 
 describe("Question DAO", () => {
 	const dbConfig = new JSONReader(Environment.Test).read("config.json")
@@ -15,7 +16,7 @@ describe("Question DAO", () => {
 		dbConfig.dialect
 	)
 
-	let sequelize: any
+	let sequelize: Sequelize
 	let savedQuestion: Question
 
 	beforeEach(async () => {

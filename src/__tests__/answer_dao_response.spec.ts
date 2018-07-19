@@ -8,6 +8,7 @@ import {
 	AnswerPersistentModel
 } from "../model/persistent/persistent_type"
 import { JSONReader, Environment } from "../helper/test/file_manager"
+import { Sequelize } from "sequelize";
 
 describe("Answer DAO", () => {
 	const dbConfig = new JSONReader(Environment.Test).read("config.json")
@@ -19,7 +20,7 @@ describe("Answer DAO", () => {
 		dbConfig.dialect
 	)
 
-	let sequelize: any
+	let sequelize: Sequelize
 	let savedAnswer: Answer
 
 	beforeEach(async () => {
