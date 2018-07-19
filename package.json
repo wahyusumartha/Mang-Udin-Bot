@@ -9,7 +9,7 @@
     "build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
     "watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "author": "Wahyu Sumartha",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "reflect-metadata": "^0.1.12",
     "sequelize": "^4.37.10",
     "sequelize-typescript": "^0.6.6-beta.1",
-    "serverless": "^1.27.3"
+    "serverless": "^1.28.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.5",
