@@ -40,16 +40,14 @@ export class AnswerDAO implements AnswerHandler {
 
 	async getLastAnswerToday(slackId: string): Promise<Answer> {
 		const start = moment()
-			.utc()
 			.startOf("day")
 		const end = moment()
-			.utc()
 			.endOf("day")
 
 		const answer = await Answer.findOne({
 			where: {
 				slackId: slackId,
-				createdAt: {
+				updatedAt: {
 					$between: [start.toDate(), end.toDate()]
 				}
 			},
@@ -67,16 +65,14 @@ export class AnswerDAO implements AnswerHandler {
 
 	async getAnswersToday(slackId: string): Promise<Answer[]> {
 		const start = moment()
-			.utc()
 			.startOf("day")
 		const end = moment()
-			.utc()
 			.endOf("day")
 
 		const answer = await Answer.findAll({
 			where: {
 				slackId: slackId,
-				createdAt: {
+				updatedAt: {
 					$between: [start.toDate(), end.toDate()]
 				}
 			},
