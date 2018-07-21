@@ -69,6 +69,13 @@ describe("Answer DAO", () => {
 		expect(moment(answer.createdAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
 	})
 
+	test("Get Answers Today By SlackID", async () => {
+		const answerDAO = new AnswerDAO()
+		const answers = await answerDAO.getAnswersToday("1")
+		expect(answers.length).toEqual(1)
+		expect(moment(answers[0].createdAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
+	})
+
 	test("Update Answer Data", async () => {
 		const answerDAO = new AnswerDAO()
 		const newAnswerData: AnswerPersistentModel = {
