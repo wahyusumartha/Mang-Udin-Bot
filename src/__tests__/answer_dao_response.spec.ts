@@ -66,14 +66,17 @@ describe("Answer DAO", () => {
 		expect(answer.slackId).toEqual("1")
 		expect(answer.slackMessageId).toEqual("1")
 		expect(answer.answerText).toEqual("Answer Text")
-		expect(moment(answer.createdAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
+		expect(answer.question).not.toBeNull()
+		expect(moment(answer.updatedAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
 	})
 
 	test("Get Answers Today By SlackID", async () => {
 		const answerDAO = new AnswerDAO()
 		const answers = await answerDAO.getAnswersToday("1")
+		const singleAnswer = answers[0]
 		expect(answers.length).toEqual(1)
-		expect(moment(answers[0].createdAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
+		expect(singleAnswer).not.toBeNull()
+		expect(moment(singleAnswer.updatedAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
 	})
 
 	test("Update Answer Data", async () => {
