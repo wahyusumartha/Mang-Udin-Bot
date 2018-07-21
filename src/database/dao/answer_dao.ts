@@ -1,11 +1,13 @@
 import { Answer } from "../models/Answer"
 import { Question } from "../models/Question"
+import moment from "moment"
 import { AnswerPersistentModel } from "../../model/persistent/persistent_type"
 
 interface AnswerHandler {
 	getAnswers(): Promise<Answer[]>
 	getAnswerById(answerId: number): Promise<Answer>
 	saveAnswer(answerModel: AnswerPersistentModel): Promise<Answer>
+	getLastAnswerToday(slackId: string): Promise<Answer>
 	updateAnswer(
 		answerId: number,
 		answerModel: AnswerPersistentModel
@@ -33,6 +35,33 @@ export class AnswerDAO implements AnswerHandler {
 		})
 		const savedAnswer = await answer.save()
 		return savedAnswer
+	}
+
+	async getLastAnswerToday(slackId: string): Promise<Answer> {
+		const start = moment()
+			.utc()
+			.startOf("day")
+		const end = moment()
+			.utc()
+			.endOf("day")
+
+		const answer = await Answer.findOne({
+			where: {
+				slackId: slackId,
+				createdAt: {
+					$between: [start.toDate(), end.toDate()]
+				}
+			},
+			limit: 1,
+			order: [["createdAt", "asc"]],
+			include: [
+				{
+					model: Question,
+					as: "question"
+				}
+			]
+		})
+		return answer
 	}
 
 	async updateAnswer(
