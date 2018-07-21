@@ -8,6 +8,7 @@ interface AnswerHandler {
 	getAnswerById(answerId: number): Promise<Answer>
 	saveAnswer(answerModel: AnswerPersistentModel): Promise<Answer>
 	getLastAnswerToday(slackId: string): Promise<Answer>
+	getAnswersToday(slackId: string): Promise<Answer[]>
 	updateAnswer(
 		answerId: number,
 		answerModel: AnswerPersistentModel
@@ -54,6 +55,31 @@ export class AnswerDAO implements AnswerHandler {
 			},
 			limit: 1,
 			order: [["createdAt", "asc"]],
+			include: [
+				{
+					model: Question,
+					as: "question"
+				}
+			]
+		})
+		return answer
+	}
+
+	async getAnswersToday(slackId: string): Promise<Answer[]> {
+		const start = moment()
+			.utc()
+			.startOf("day")
+		const end = moment()
+			.utc()
+			.endOf("day")
+
+		const answer = await Answer.findAll({
+			where: {
+				slackId: slackId,
+				createdAt: {
+					$between: [start.toDate(), end.toDate()]
+				}
+			},
 			include: [
 				{
 					model: Question,
