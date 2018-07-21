@@ -3,6 +3,7 @@ import { DatabaseConfigurator } from "../database/database_configurator"
 import { Answer } from "../database/models/Answer"
 import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
+import moment from "moment"
 import {
 	QuestionPersistentModel,
 	AnswerPersistentModel
@@ -55,6 +56,17 @@ describe("Answer DAO", () => {
 			const allAnswerData = await answerDAO.getAnswers()
 			expect(allAnswerData.length).toEqual(2)
 		}
+	})
+
+	test("Get Last Answer Today By SlackID", async () => {
+		const answerDAO = new AnswerDAO()
+		const answer = await answerDAO.getLastAnswerToday("1")
+		expect(answer.id).toEqual(savedAnswer.id)
+		expect(answer.questionId).toEqual(savedAnswer.questionId)
+		expect(answer.slackId).toEqual("1")
+		expect(answer.slackMessageId).toEqual("1")
+		expect(answer.answerText).toEqual("Answer Text")
+		expect(moment(answer.createdAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
 	})
 
 	test("Update Answer Data", async () => {
