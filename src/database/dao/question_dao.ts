@@ -4,6 +4,7 @@ import { QuestionPersistentModel } from "../../model/persistent/persistent_type"
 interface QuestionHandler {
 	getQuestions(): Promise<Question[]>
 	getQuestionById(questionId: number): Promise<Question>
+	getQuestionByOrder(order: number): Promise<Question>
 	saveQuestion(questionModel: QuestionPersistentModel): Promise<Question>
 	updateQuestion(
 		questionId: number,
@@ -13,7 +14,6 @@ interface QuestionHandler {
 }
 
 export class QuestionDAO implements QuestionHandler {
-
 	async getQuestions(): Promise<Question[]> {
 		const questions = await Question.findAll()
 		return questions
@@ -21,6 +21,11 @@ export class QuestionDAO implements QuestionHandler {
 
 	async getQuestionById(questionId: number): Promise<Question> {
 		const question = await Question.findOne({ where: { id: questionId } })
+		return question
+	}
+
+	async getQuestionByOrder(order: number): Promise<Question> {
+		const question = await Question.findOne({ where: { order: order } })
 		return question
 	}
 
