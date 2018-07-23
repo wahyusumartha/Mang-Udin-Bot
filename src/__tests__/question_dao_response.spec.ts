@@ -4,7 +4,7 @@ import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
 import { QuestionPersistentModel } from "../model/persistent/persistent_type"
 import { JSONReader, Environment } from "../helper/test/file_manager"
-import { Sequelize } from "sequelize-typescript";
+import { Sequelize } from "sequelize-typescript"
 
 describe("Question DAO", () => {
 	const dbConfig = new JSONReader(Environment.Test).read("config.json")
@@ -32,6 +32,13 @@ describe("Question DAO", () => {
 		const question = await questionDAO.getQuestionById(savedQuestion.id)
 		expect(question).not.toBeNull()
 		expect(question.questionText).toEqual("Question Text")
+		expect(question.order).toEqual(1)
+	})
+
+	test("Get Question By Order", async () => {
+		const questionDAO = new QuestionDAO()
+		const question = await questionDAO.getQuestionByOrder(1)
+		expect(question).not.toBeNull()
 		expect(question.order).toEqual(1)
 	})
 
