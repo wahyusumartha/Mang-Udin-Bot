@@ -25,12 +25,16 @@ export class SlackClient {
 	 * @param slackMessage an interface of needed parameter to send a message to slack
 	 */
 	async sendMessage(slackMessage: SlackMessage): Promise<WebAPICallResult> {
-		const response = await this.webClient().chat.postMessage({
-			text: slackMessage.message,
-			channel: slackMessage.channel,
-			as_user: slackMessage.as_user
-		})
-		return response
+		try {
+			const response = await this.webClient().chat.postMessage({
+				text: slackMessage.message,
+				channel: slackMessage.channel,
+				as_user: slackMessage.as_user
+			})
+			return response
+		} catch (error) {
+			return error
+		}
 	}
 
 	/**
