@@ -56,6 +56,13 @@ export class SlackClient {
 		const response = await this.webClient().conversations.open({
 			users: users
 		})
-		return (response as any).channel.id
+
+		if ("channel" in (response as any)) {
+			return "id" in (response as any).channel
+				? (response as any).channel.id
+				: undefined
+		} else {
+			return undefined
+		}
 	}
 }
