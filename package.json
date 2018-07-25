@@ -1,37 +1,38 @@
 {
-  "name": "mang-udin",
-  "version": "1.0.0",
-  "description": "This is a bot that will send you a gently reminder that you need to do daily standup",
-  "main": "handler.js",
-  "scripts": {
-    "deploy": "npm run build && serverless deploy",
-    "build": "npm run build-ts && npm run tslint",
-    "build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
-    "watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "test": "jest --runInBand"
-  },
-  "author": "Wahyu Sumartha",
-  "license": "MIT",
-  "dependencies": {
-    "@slack/client": "^4.2.2",
-    "js-yaml": "^3.11.0",
-    "moment": "^2.22.2",
-    "pg": "^7.4.3",
-    "pg-hstore": "^2.3.2",
-    "reflect-metadata": "^0.1.12",
-    "sequelize": "^4.37.10",
-    "sequelize-typescript": "^0.6.6-beta.1",
-    "serverless": "^1.28.0"
-  },
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.5",
-    "@types/jest": "^22.2.3",
-    "@types/js-yaml": "^3.11.1",
-    "jest": "^23.0.0",
-    "slack-mock": "^1.1.1",
-    "ts-jest": "^22.4.6",
-    "tslint": "^5.10.0",
-    "typescript": "^2.8.3"
-  }
+	"name": "mang-udin",
+	"version": "1.0.0",
+	"description": "This is a bot that will send you a gently reminder that you need to do daily standup",
+	"main": "handler.js",
+	"scripts": {
+		"deploy": "npm run build && serverless deploy",
+		"build": "npm run build-ts && npm run tslint",
+		"build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
+		"watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
+		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"test": "jest --runInBand --detectOpenHandles"
+	},
+	"author": "Wahyu Sumartha",
+	"license": "MIT",
+	"dependencies": {
+		"@slack/client": "^4.2.2",
+		"js-yaml": "^3.11.0",
+		"moment": "^2.22.2",
+		"pg": "^7.4.3",
+		"pg-hstore": "^2.3.2",
+		"reflect-metadata": "^0.1.12",
+		"sequelize": "^4.37.10",
+		"sequelize-typescript": "^0.6.6-beta.1",
+		"serverless": "^1.28.0"
+	},
+	"devDependencies": {
+		"@types/aws-lambda": "^8.10.5",
+		"@types/jest": "^22.2.3",
+		"@types/js-yaml": "^3.11.1",
+		"@types/nock": "^9.3.0",
+		"jest": "^23.0.0",
+		"nock": "^9.4.3",
+		"ts-jest": "^22.4.6",
+		"tslint": "^5.10.0",
+		"typescript": "^2.8.3"
+	}
 }
