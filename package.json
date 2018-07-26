@@ -9,7 +9,7 @@
 		"build-ts": "tsc --lib es2015,dom,esnext.asynciterable",
 		"watch-ts": "tsc -w --lib es2015,dom,esnext.asynciterable",
 		"tslint": "tslint -c tslint.json -p tsconfig.json",
-		"test": "jest --runInBand --detectOpenHandles"
+		"test": "jest --runInBand"
 	},
 	"author": "Wahyu Sumartha",
 	"license": "MIT",
