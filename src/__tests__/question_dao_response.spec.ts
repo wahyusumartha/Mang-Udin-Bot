@@ -97,6 +97,6 @@ describe("Question DAO", () => {
 	const sequelizeClose = async () => {
 		await Answer.destroy({ truncate: true, force: true, cascade: true })
 		await Question.destroy({ truncate: true, force: true, cascade: true })
-		sequelize.close()
+		await sequelize.close()
 	}
 })
