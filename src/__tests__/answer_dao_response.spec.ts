@@ -9,7 +9,7 @@ import {
 	AnswerPersistentModel
 } from "../model/persistent/persistent_type"
 import { JSONReader, Environment } from "../helper/test/file_manager"
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize"
 
 describe("Answer DAO", () => {
 	const dbConfig = new JSONReader(Environment.Test).read("config.json")
@@ -67,7 +67,9 @@ describe("Answer DAO", () => {
 		expect(answer.slackMessageId).toEqual("1")
 		expect(answer.answerText).toEqual("Answer Text")
 		expect(answer.question).not.toBeNull()
-		expect(moment(answer.updatedAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
+		expect(moment(answer.updatedAt).format("YYYY-MM-DD")).toEqual(
+			moment().format("YYYY-MM-DD")
+		)
 	})
 
 	test("Get Answers Today By SlackID", async () => {
@@ -76,7 +78,9 @@ describe("Answer DAO", () => {
 		const singleAnswer = answers[0]
 		expect(answers.length).toEqual(1)
 		expect(singleAnswer).not.toBeNull()
-		expect(moment(singleAnswer.updatedAt).format("YYYY-MM-DD")).toEqual(moment().format("YYYY-MM-DD"))
+		expect(moment(singleAnswer.updatedAt).format("YYYY-MM-DD")).toEqual(
+			moment().format("YYYY-MM-DD")
+		)
 	})
 
 	test("Update Answer Data", async () => {
