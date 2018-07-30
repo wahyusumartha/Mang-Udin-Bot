@@ -19,31 +19,64 @@ export class SlackEventProcessor
 	}
 
 	async process(event: SlackMessageResponse): Promise<boolean> {
-		const slackUserId = event.user
-		const latestAnswers = await this.answerDataAccessObject.getAnswersToday(
-			slackUserId
+		const hasProcessedSlackMessage = await this.hasProcessedSlackMessage(
+			event.client_msg_id
+		)
+		const hasAnsweredAllQuestions = await this.hasAnsweredAllQuestions(
+			event.user
 		)
 
-		const isFirstAnswer = latestAnswers.length == 0
-		if (isFirstAnswer) {
-			const hasSentMessage = await this.processFirstAnswer(
-				slackUserId,
-				event.client_msg_id,
-				event.text
-			)
-			return hasSentMessage
+		if (hasProcessedSlackMessage || hasAnsweredAllQuestions) {
+			return false
 		} else {
-			const latestAnswer = latestAnswers[0]
-			const isEditedText = event.edited != undefined
-			const hasSentMessage = await this.processNextAnswer(
-				latestAnswer,
-				slackUserId,
-				event.client_msg_id,
-				event.text,
-				isEditedText
+			const slackUserId = event.user
+			const latestAnswers = await this.answerDataAccessObject.getAnswersToday(
+				slackUserId
 			)
-			return hasSentMessage
+
+			const isFirstAnswer = latestAnswers.length == 0
+			if (isFirstAnswer) {
+				const hasSentMessage = await this.processFirstAnswer(
+					slackUserId,
+					event.client_msg_id,
+					event.text
+				)
+				return hasSentMessage
+			} else {
+				const latestAnswer = await this.answerDataAccessObject.getLastAnswerToday(
+					slackUserId
+				)
+				const isEditedText = event.edited != undefined
+				const hasSentMessage = await this.processNextAnswer(
+					latestAnswer,
+					slackUserId,
+					event.client_msg_id,
+					event.text,
+					isEditedText
+				)
+				return hasSentMessage
+			}
 		}
+	}
+
+	private async hasProcessedSlackMessage(
+		slackMessageId: string
+	): Promise<boolean> {
+		const answersForSlackMessage = await this.answerDataAccessObject.getAnswersBySlackMessageId(
+			slackMessageId
+		)
+		const hasProcessedSlackMessage = answersForSlackMessage.length > 0
+		return hasProcessedSlackMessage
+	}
+
+	private async hasAnsweredAllQuestions(slackUserId: string): Promise<boolean> {
+		const questions = await this.questionDataAccessObject.getQuestions()
+		const maxQuestion = questions.length
+		const todayAnswers = await this.answerDataAccessObject.getAnswersToday(
+			slackUserId
+		)
+		const hasAnswerAllQuestions = todayAnswers.length == maxQuestion
+		return hasAnswerAllQuestions
 	}
 
 	private async processFirstAnswer(
@@ -51,6 +84,13 @@ export class SlackEventProcessor
 		clientMessageId: string,
 		slackEventMessage: string
 	): Promise<boolean> {
+		// send message first to avoid delay
+		const nextQuestion = await this.questionDataAccessObject.getQuestionByOrder(
+			2
+		)
+		const message = nextQuestion.questionText
+		const hasSentMessage = await this.messageSender.send(slackUserId, message)
+
 		const firstQuestion = await this.questionDataAccessObject.getQuestionByOrder(
 			1
 		)
@@ -62,8 +102,6 @@ export class SlackEventProcessor
 		}
 		await this.answerDataAccessObject.saveAnswer(answerModel)
 
-		const message = await this.message(false, 1)
-		const hasSentMessage = await this.messageSender.send(slackUserId, message)
 		return hasSentMessage
 	}
 
@@ -74,50 +112,55 @@ export class SlackEventProcessor
 		slackEventMessage: string,
 		isEditedText: boolean
 	): Promise<boolean> {
-		const questions = await this.questionDataAccessObject.getQuestions()
-		const maxQuestion = questions.length
-		const hasAnswerAllQuestions = latestAnswer.question.order == maxQuestion
-
 		// save or update answer
-		const answerModel: AnswerPersistentModel = {
-			slackId: slackUserId,
-			slackMessageId: clientMessageId,
-			questionId: latestAnswer.question.id,
-			answerText: slackEventMessage
-		}
 
 		if (isEditedText) {
+			const answerModel: AnswerPersistentModel = {
+				slackId: slackUserId,
+				slackMessageId: clientMessageId,
+				questionId: latestAnswer.question.id,
+				answerText: slackEventMessage
+			}
+
 			await this.answerDataAccessObject.updateAnswer(
 				latestAnswer.id,
 				answerModel
 			)
 			return false
 		} else {
-			await this.answerDataAccessObject.saveAnswer(answerModel)
-		}
-
-		const message: string = await this.message(
-			hasAnswerAllQuestions,
-			latestAnswer.question.order
-		)
-		// send message
-		// either next question or thank you message
-		const hasSentMessage = await this.messageSender.send(slackUserId, message)
-		return hasSentMessage
-	}
-
-	private async message(
-		hasAnswerAllQuestions: boolean,
-		currentOrder: number
-	): Promise<string> {
-		if (hasAnswerAllQuestions) {
-			return "Thank You and Have Fun"
-		} else {
-			const nextOrder = currentOrder + 1
-			const nextQuestion = await this.questionDataAccessObject.getQuestionByOrder(
-				nextOrder
+			const currentOrder = latestAnswer.question.order
+			const nextSaveQuestionOrder = currentOrder + 1
+			const nextSaveQuestion = await this.questionDataAccessObject.getQuestionByOrder(
+				nextSaveQuestionOrder
 			)
-			return nextQuestion.questionText
+			const answerModel: AnswerPersistentModel = {
+				slackId: slackUserId,
+				slackMessageId: clientMessageId,
+				questionId: nextSaveQuestion.id,
+				answerText: slackEventMessage
+			}
+
+			await this.answerDataAccessObject.saveAnswer(answerModel)
+
+			const hasAnswerAllQuestions = await this.hasAnsweredAllQuestions(
+				slackUserId
+			)
+
+			let message: string
+			if (hasAnswerAllQuestions) {
+				message = "Thank You and Have Fun :clap::palm_tree:"
+			} else {
+				const nextQuestionOrder = nextSaveQuestionOrder + 1
+				const nextQuestion = await this.questionDataAccessObject.getQuestionByOrder(
+					nextQuestionOrder
+				)
+				message = nextQuestion.questionText
+			}
+
+			// send message
+			// either next question or thank you message
+			const hasSentMessage = await this.messageSender.send(slackUserId, message)
+			return hasSentMessage
 		}
 	}
 }
