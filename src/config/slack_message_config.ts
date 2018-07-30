@@ -36,23 +36,7 @@ export class Configurator {
 }
 
 export class MessageTemplate {
-	botMangUdinMessage(
-		userId: string,
-		channelId: string,
-		channelName: string
-	): string {
-		return (
-			"Hey <@" +
-			userId +
-			"> nama gw Mang Udin, Gua sih cuman Ngebantuin si boss,\n" +
-			"Tiap Jam 10 Pagi di channel `<#" +
-			channelId +
-			"|" +
-			channelName +
-			">`\n\n" +
-			"1. Ngingetin lu buat nge post apa aja yang udah luw kerjain kemaren\n" +
-			"2. Ngingetin apa yang mau lu kerjain hari ini\n\n" +
-			"Jadi biar gw nggak dimarahin si boss, cepetan bikin update ya :bearded_person: :metal:"
-		)
+	botMangUdinMessage(userId: string): string {
+		return `Hello <@${userId}>! It's time for our standup meeting. When you are ready please answer the following question:\nWhat did you accomplish yesterday?`
 	}
 }
