@@ -83,6 +83,17 @@ describe("Answer DAO", () => {
 		)
 	})
 
+	test("Get Answers Today By SlackMessageID", async () => {
+		const answerDAO = new AnswerDAO()
+		const answers = await answerDAO.getAnswersBySlackMessageId("1")
+		const singleAnswer = answers[0]
+		expect(answers.length).toEqual(1)
+		expect(singleAnswer).not.toBeNull()
+		expect(moment(singleAnswer.updatedAt).format("YYYY-MM-DD")).toEqual(
+			moment().format("YYYY-MM-DD")
+		)
+	})
+
 	test("Update Answer Data", async () => {
 		const answerDAO = new AnswerDAO()
 		const newAnswerData: AnswerPersistentModel = {
