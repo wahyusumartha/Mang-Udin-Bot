@@ -1,6 +1,3 @@
-test("it should return true", () => {
-	expect(1 + 1).toEqual(2)
-})
 import { JSONReader, Environment } from "../helper/test/file_manager"
 import { DatabaseConfigurator } from "../database/database_configurator"
 import { Sequelize } from "../../node_modules/sequelize-typescript"
