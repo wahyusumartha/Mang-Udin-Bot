@@ -10,19 +10,11 @@ import { MessageTemplate, Configurator } from "../config/slack_message_config"
  */
 const PostMessageHelper = async (callback: Callback) => {
 	const configurator = new Configurator("env.yml")
-	const authToken = configurator.getSlackConfig().authToken
 	const botToken = configurator.getSlackConfig().botToken
-	const channel = configurator.getSlackConfig().channel
-	const channelName = configurator.getSlackConfig().channelName
-	const client = new SlackClient(authToken)
 	const botClient = new SlackClient(botToken)
-	const members = await retrieveMembers(channel, client)
+	const members = ["U02GR2NER", "U02GSD5AU"]
 	members.forEach(async memberId => {
-		const message = new MessageTemplate().botMangUdinMessage(
-			memberId,
-			channel,
-			channelName
-		)
+		const message = new MessageTemplate().botMangUdinMessage(memberId)
 		const channelId = await botClient.openConversation(memberId)
 		sendReminder(botClient, channelId, message, callback)
 	})
@@ -55,21 +47,6 @@ async function sendReminder(
 	} else {
 		callback(Error(response.toString()), undefined)
 	}
-}
-
-/**
- * A Helper method to retrieve array of memberId from a particular channel
- * @param context			An aws-lambda context object
- * @param channelId		The channel ID that will be retrieved to get an array of member ID
- * @param client			The slack WebClient Object that will be used to retrieve private channel information
- */
-async function retrieveMembers(
-	channelId: string,
-	client: SlackClient
-): Promise<string[]> {
-	const groupInformations = await client.getGroupInfo(channelId)
-	const members = (groupInformations as any).group.members
-	return members
 }
 
 export { PostMessageHelper }
