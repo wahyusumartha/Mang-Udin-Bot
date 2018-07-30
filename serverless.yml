@@ -22,45 +22,10 @@ provider:
   runtime: nodejs8.10
 
 # you can overwrite defaults here
-  stage: dev
+  stage: ${opt:stage}
   region: us-east-1
   environment:
-    DB_HOST: ${file(./env.yml):postgresql.${self:provider.stage}.host}
-    DB_PORT: ${file(./env.yml):postgresql.${self:provider.stage}.port}
-    DB_USERNAME: ${file(./env.yml):postgresql.${self:provider.stage}.username}
-    DB_PASSWORD: ${file(./env.yml):postgresql.${self:provider.stage}.password}
-    DB_DATABASE: ${file(./env.yml):postgresql.${self:provider.stage}.database}
-    DB_MAX_POOL: ${file(./env.yml):postgresql.${self:provider.stage}.max_pool}
-    DB_DIALECT: ${file(./env.yml):postgresql.${self:provider.stage}.dialect}
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+    ENV_STAGE: ${self:provider.stage}
 
 functions:
   bot-mang-udin:
