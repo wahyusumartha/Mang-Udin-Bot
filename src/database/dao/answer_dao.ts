@@ -9,6 +9,7 @@ interface AnswerHandler {
 	saveAnswer(answerModel: AnswerPersistentModel): Promise<Answer>
 	getLastAnswerToday(slackId: string): Promise<Answer>
 	getAnswersToday(slackId: string): Promise<Answer[]>
+	getAnswersBySlackMessageId(slackMessageId: string): Promise<Answer[]>
 	updateAnswer(
 		answerId: number,
 		answerModel: AnswerPersistentModel
@@ -52,7 +53,7 @@ export class AnswerDAO implements AnswerHandler {
 				}
 			},
 			limit: 1,
-			order: [["createdAt", "asc"]],
+			order: [["updatedAt", "DESC"]],
 			include: [
 				{
 					model: Question,
@@ -72,6 +73,29 @@ export class AnswerDAO implements AnswerHandler {
 		const answer = await Answer.findAll({
 			where: {
 				slackId: slackId,
+				updatedAt: {
+					$between: [start.toDate(), end.toDate()]
+				}
+			},
+			include: [
+				{
+					model: Question,
+					as: "question"
+				}
+			]
+		})
+		return answer
+	}
+
+	async getAnswersBySlackMessageId(slackMessageId: string): Promise<Answer[]> {
+		const start = moment()
+			.startOf("day")
+		const end = moment()
+			.endOf("day")
+
+		const answer = await Answer.findAll({
+			where: {
+				slackMessageId: slackMessageId,
 				updatedAt: {
 					$between: [start.toDate(), end.toDate()]
 				}
