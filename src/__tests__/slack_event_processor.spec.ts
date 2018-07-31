@@ -110,6 +110,9 @@ describe("Slack Event Processor", () => {
 			const answerDAO = new AnswerDAO()
 			const todayAnswers = await answerDAO.getAnswersToday("D024BE91L")
 			expect(todayAnswers.length).toEqual(questions.length)
+
+			const lastAnswer = await answerDAO.getLastAnswerToday("D024BE91L")
+			expect(lastAnswer.question.order).toEqual(3)
 		})
 	})
 
@@ -148,6 +151,9 @@ describe("Slack Event Processor", () => {
 			const answerDAO = new AnswerDAO()
 			const todayAnswers = await answerDAO.getAnswersToday("D024BE91L")
 			expect(todayAnswers.length).toEqual(2)
+
+			const lastAnswer = await answerDAO.getLastAnswerToday("D024BE91L")
+			expect(lastAnswer.question.order).toEqual(2)
 		})
 	})
 

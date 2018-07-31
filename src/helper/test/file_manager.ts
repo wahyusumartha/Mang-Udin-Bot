@@ -20,8 +20,25 @@ export enum Environment {
 export class JSONReader implements FileManager<DBConfig> {
 	private environment: Environment
 
-	constructor(environment: Environment) {
-		this.environment = environment
+	constructor(environment?: Environment) {
+		if (environment == undefined) {
+			switch (process.env.ENV_STAGE) {
+				case "dev": {
+					environment = Environment.Development
+					break
+				}
+				case "production": {
+					environment = Environment.Production
+					break
+				}
+				default: {
+					environment = Environment.Test
+					break
+				}
+			}
+		} else {
+			this.environment = environment
+		}
 	}
 
 	read(filePath: string): DBConfig {
