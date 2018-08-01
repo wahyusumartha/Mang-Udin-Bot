@@ -1,13 +1,13 @@
 import { AnswerDAO } from "../database/dao/answer_dao"
 import { DatabaseConfigurator } from "../database/database_configurator"
 import { Answer } from "../database/models/Answer"
-import { Question } from "../database/models/Question"
-import { QuestionDAO } from "../database/dao/question_dao"
-import moment from "moment"
 import {
-	QuestionPersistentModel,
-	AnswerPersistentModel
-} from "../model/persistent/persistent_type"
+	OpenConnectionHelper,
+	CloseConnectionHelper,
+	PrepareAnswerDataHelper
+} from "../helper/sequelize_connection_helper"
+import moment from "moment"
+import { AnswerPersistentModel } from "../model/persistent/persistent_type"
 import { JSONReader, Environment } from "../helper/test/file_manager"
 import { Sequelize } from "sequelize"
 
@@ -25,11 +25,12 @@ describe("Answer DAO", () => {
 	let savedAnswer: Answer
 
 	beforeEach(async () => {
-		await sequelizeOpen()
+		sequelize = await OpenConnectionHelper(databaseConfigurator)
+		savedAnswer = await PrepareAnswerDataHelper()
 	})
 
 	afterEach(async () => {
-		await sequelizeClose()
+		await CloseConnectionHelper(sequelize)
 	})
 
 	test("Get Answer By ID", async () => {
@@ -114,41 +115,4 @@ describe("Answer DAO", () => {
 		const isDeleted = await answerDAO.deleteAnswer(savedAnswer.id)
 		expect(isDeleted).toEqual(1)
 	})
-
-	// Helper Method
-	const prepareData = async (): Promise<Answer> => {
-		const questionDAO = new QuestionDAO()
-		const questionPersistentModel: QuestionPersistentModel = {
-			questionText: "Question Text",
-			order: 1
-		}
-		const savedQuestion = await questionDAO.saveQuestion(
-			questionPersistentModel
-		)
-
-		// save answer based on question
-		const answerDAO = new AnswerDAO()
-		const answerPersistentModel: AnswerPersistentModel = {
-			slackId: "1",
-			slackMessageId: "1",
-			answerText: "Answer Text",
-			questionId: savedQuestion.id
-		}
-		const savedAnswer = await answerDAO.saveAnswer(answerPersistentModel)
-
-		return savedAnswer
-	}
-
-	const sequelizeOpen = async () => {
-		sequelize = databaseConfigurator.getSequelize()
-		await Answer.destroy({ truncate: true, force: true, cascade: true })
-		await Question.destroy({ truncate: true, force: true, cascade: true })
-		savedAnswer = await prepareData()
-	}
-
-	const sequelizeClose = async () => {
-		await Answer.destroy({ truncate: true, force: true, cascade: true })
-		await Question.destroy({ truncate: true, force: true, cascade: true })
-		await sequelize.close()
-	}
 })
