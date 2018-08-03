@@ -2,9 +2,9 @@ import { AnswerDAO } from "../database/dao/answer_dao"
 import { DatabaseConfigurator } from "../database/database_configurator"
 import { Answer } from "../database/models/Answer"
 import {
-	OpenConnectionHelper,
-	CloseConnectionHelper,
-	PrepareAnswerDataHelper
+	OpenDatabaseConnection,
+	CloseDatabaseConnection,
+	PrepareAnswerData
 } from "../helper/sequelize_connection_helper"
 import moment from "moment"
 import { AnswerPersistentModel } from "../model/persistent/persistent_type"
@@ -25,12 +25,12 @@ describe("Answer DAO", () => {
 	let savedAnswer: Answer
 
 	beforeEach(async () => {
-		sequelize = await OpenConnectionHelper(databaseConfigurator)
-		savedAnswer = await PrepareAnswerDataHelper()
+		sequelize = await OpenDatabaseConnection(databaseConfigurator)
+		savedAnswer = await PrepareAnswerData()
 	})
 
 	afterEach(async () => {
-		await CloseConnectionHelper(sequelize)
+		await CloseDatabaseConnection(sequelize)
 	})
 
 	test("Get Answer By ID", async () => {

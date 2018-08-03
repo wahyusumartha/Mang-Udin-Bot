@@ -10,7 +10,7 @@ import { Sequelize } from "../../node_modules/@types/sequelize"
 import { DatabaseConfigurator } from "../database/database_configurator"
 
 // Open Connection Helper
-const OpenConnectionHelper = async (
+const OpenDatabaseConnection = async (
 	databaseConfigurator: DatabaseConfigurator
 ): Promise<Sequelize> => {
 	const sequelize = databaseConfigurator.getSequelize()
@@ -20,14 +20,14 @@ const OpenConnectionHelper = async (
 }
 
 // Close Connection Helper
-const CloseConnectionHelper = async (sequelize: Sequelize) => {
+const CloseDatabaseConnection = async (sequelize: Sequelize) => {
 	await Answer.destroy({ truncate: true, force: true, cascade: true })
 	await Question.destroy({ truncate: true, force: true, cascade: true })
 	await sequelize.close()
 }
 
 // Prepare Answer Data Helper
-const PrepareAnswerDataHelper = async (): Promise<Answer> => {
+const PrepareAnswerData = async (): Promise<Answer> => {
 	const questionDAO = new QuestionDAO()
 	const questionPersistentModel: QuestionPersistentModel = {
 		questionText: "Question Text",
@@ -49,7 +49,7 @@ const PrepareAnswerDataHelper = async (): Promise<Answer> => {
 }
 
 // Prepare Question Data Helper
-const PrepareQuestionDataHelper = async (): Promise<Question> => {
+const PrepareQuestionData = async (): Promise<Question> => {
 	const questionDAO = new QuestionDAO()
 	const questionPersistentModel: QuestionPersistentModel = {
 		questionText: "Question Text",
@@ -60,8 +60,8 @@ const PrepareQuestionDataHelper = async (): Promise<Question> => {
 }
 
 export {
-	OpenConnectionHelper,
-	CloseConnectionHelper,
-	PrepareAnswerDataHelper,
-	PrepareQuestionDataHelper
+	OpenDatabaseConnection,
+	CloseDatabaseConnection,
+	PrepareAnswerData,
+	PrepareQuestionData
 }
