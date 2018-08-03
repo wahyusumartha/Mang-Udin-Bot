@@ -1,7 +1,6 @@
-import { DatabaseConfigurator } from "./database_configurator"
 import { JSONReader, Environment } from "../helper/test/file_manager"
-import { QuestionDAO } from "./dao/question_dao"
-import { QuestionPersistentModel } from "../model/persistent/persistent_type"
+import { DatabaseConfigurator } from "./database_configurator"
+import { SeedQuestionData } from "../helper/sequelize_connection_helper"
 
 const env = process.argv[2]
 
@@ -30,35 +29,5 @@ const dbConfigurator = new DatabaseConfigurator(
 	dbJSON.password,
 	dbJSON.dialect
 )
-const sequelize = dbConfigurator.getSequelize()
-sequelize
-	.sync()
-	.then(async () => {
-		const questionDAO = new QuestionDAO()
 
-		const firstQuestion: QuestionPersistentModel = {
-			questionText: "What did you accomplish yesterday?",
-			order: 1
-		}
-
-		const secondQuestion: QuestionPersistentModel = {
-			questionText: "What will you do today?",
-			order: 2
-		}
-
-		const thirdQuestion: QuestionPersistentModel = {
-			questionText: "What obstacles are impeding your progress?",
-			order: 3
-		}
-
-		await questionDAO.saveQuestion(firstQuestion)
-		await questionDAO.saveQuestion(secondQuestion)
-		await questionDAO.saveQuestion(thirdQuestion)
-
-		await sequelize.close()
-		process.exit()
-	})
-	.catch(async () => {
-		await sequelize.close()
-		process.exit()
-	})
+SeedQuestionData(dbConfigurator)
