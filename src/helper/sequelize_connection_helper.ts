@@ -59,9 +59,46 @@ const PrepareQuestionData = async (): Promise<Question> => {
 	return savedQuestion
 }
 
+// Seed Question Data Helper
+const SeedQuestionData = (databaseConfigurator: DatabaseConfigurator) => {
+	const sequelize = databaseConfigurator.getSequelize()
+	sequelize
+		.sync()
+		.then(async () => {
+			const questionDAO = new QuestionDAO()
+
+			const firstQuestion: QuestionPersistentModel = {
+				questionText: "What did you accomplish yesterday?",
+				order: 1
+			}
+
+			const secondQuestion: QuestionPersistentModel = {
+				questionText: "What will you do today?",
+				order: 2
+			}
+
+			const thirdQuestion: QuestionPersistentModel = {
+				questionText: "What obstacles are impeding your progress?",
+				order: 3
+			}
+
+			await questionDAO.saveQuestion(firstQuestion)
+			await questionDAO.saveQuestion(secondQuestion)
+			await questionDAO.saveQuestion(thirdQuestion)
+
+			await sequelize.close()
+			process.exit()
+		})
+		.catch(async () => {
+			await sequelize.close()
+			process.exit()
+		})
+}
+
 export {
 	OpenDatabaseConnection,
 	CloseDatabaseConnection,
 	PrepareAnswerData,
-	PrepareQuestionData
+	PrepareQuestionData,
+	SeedQuestionData
 }
