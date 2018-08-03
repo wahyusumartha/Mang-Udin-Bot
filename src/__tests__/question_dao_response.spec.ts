@@ -2,9 +2,9 @@ import { DatabaseConfigurator } from "../database/database_configurator"
 import { Question } from "../database/models/Question"
 import { QuestionDAO } from "../database/dao/question_dao"
 import {
-	OpenConnectionHelper,
-	CloseConnectionHelper,
-	PrepareQuestionDataHelper
+	OpenDatabaseConnection,
+	CloseDatabaseConnection,
+	PrepareQuestionData
 } from "../helper/sequelize_connection_helper"
 import { QuestionPersistentModel } from "../model/persistent/persistent_type"
 import { JSONReader, Environment } from "../helper/test/file_manager"
@@ -24,12 +24,12 @@ describe("Question DAO", () => {
 	let savedQuestion: Question
 
 	beforeEach(async () => {
-		sequelize = await OpenConnectionHelper(databaseConfigurator)
-		savedQuestion = await PrepareQuestionDataHelper()
+		sequelize = await OpenDatabaseConnection(databaseConfigurator)
+		savedQuestion = await PrepareQuestionData()
 	})
 
 	afterEach(async () => {
-		await CloseConnectionHelper(sequelize)
+		await CloseDatabaseConnection(sequelize)
 	})
 
 	test("Get Question By ID", async () => {
