@@ -1,8 +1,6 @@
 import { Context, Callback } from "aws-lambda"
-import { SlackEventProcessor } from "../processor/slack_event_processor"
-import { MessageSender } from "../helper/message_sender"
 import { DatabaseConfigurator } from "../database/database_configurator"
-import { JSONReader, Environment } from "../helper/test/file_manager"
+import { JSONReader } from "../helper/test/file_manager"
 import {
 	EventSubcriptionProcessor,
 	Process
@@ -11,6 +9,7 @@ import { MessageChangedProcessor } from "../processor/message_changed_processor"
 import { FirstAnswerProcessor } from "../processor/first_answer_processor"
 import { NextAnswerProcessor } from "../processor/next_answer_processor"
 import { SessionEndedProcessor } from "../processor/session_ended_processor"
+import { NoneProcessor } from "../processor/none_processor"
 
 /**
  * A Lambda Function that will send a message to each of user in a particular slack channel
@@ -33,7 +32,7 @@ const receiveMessage = async (
 	console.log(`Event: ${JSON.stringify(event)}`)
 	console.log(`EventMessage: ${JSON.stringify(eventBody)}`)
 
-	await handleSlackEvent(eventBody)
+	await handleSlackEvent(eventBody.event)
 	callback(undefined, response)
 }
 
@@ -53,22 +52,33 @@ const handleSlackEvent = async (eventBody: any) => {
 
 	switch (processType) {
 		case Process.None:
+			console.log(`Start NoneProcessor from ${JSON.stringify(eventBody)}`)
 			const noneProcessor = new NoneProcessor()
 			noneProcessor.process(eventBody)
 			break
 		case Process.MesageChanged:
+			console.log(
+				`Start MessageChangedProcessor from ${JSON.stringify(eventBody)}`
+			)
 			const messageChangedProcessor = new MessageChangedProcessor()
-			await messageChangedProcessor.process(eventBody)
+			await messageChangedProcessor.process(eventBody.message)
 			break
 		case Process.FirstAnswer:
+			console.log(
+				`Start FirstAnswerProcessor from ${JSON.stringify(eventBody)}`
+			)
 			const firstAnswerProcessor = new FirstAnswerProcessor()
 			await firstAnswerProcessor.process(eventBody)
 			break
 		case Process.NextAnswer:
+			console.log(`Start NextAnswerProcessor from ${JSON.stringify(eventBody)}`)
 			const nextAnswerProcessor = new NextAnswerProcessor()
 			await nextAnswerProcessor.process(eventBody)
 			break
 		case Process.SessionEnded:
+			console.log(
+				`Start SessionEndedProcessor from ${JSON.stringify(eventBody)}`
+			)
 			const sessionEndedProcessor = new SessionEndedProcessor()
 			await sessionEndedProcessor.process(eventBody)
 			break

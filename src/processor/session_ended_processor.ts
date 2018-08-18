@@ -13,11 +13,13 @@ export class SessionEndedProcessor
 			return false
 		}
 
-		const messageSender = new MessageSender()
-		const hasSentMessage = await messageSender.send(
-			slackUserId,
-			":sweat_smile:"
-		)
-		return hasSentMessage
+		return true
+	// 	const messageSender = new MessageSender()
+	// 	const hasSentMessage = await messageSender.send(
+	// 		slackUserId,
+	// 		":sweat_smile:"
+	// 	)
+	// 	return hasSentMessage
+	// }
 	}
 }
