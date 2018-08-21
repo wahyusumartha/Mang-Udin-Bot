@@ -2,6 +2,7 @@ import { AnswerDAO } from "../database/dao/answer_dao"
 import { QuestionDAO } from "../database/dao/question_dao"
 import { AnswerPersistentModel } from "../model/persistent/persistent_type"
 import { MessageSender } from "../helper/message_sender"
+import { SummaryReport } from "../helper/summary_report"
 
 export class NextAnswerProcessor
 	implements EventProcessor<SlackMessageResponse, Promise<boolean>> {
@@ -33,6 +34,8 @@ export class NextAnswerProcessor
 
 		let message: string
 		if (hasAnswerAllQuestions) {
+			const summaryReport = new SummaryReport()
+			await summaryReport.sendToChannel(slackUserId, "mang-udin")
 			message = "Thank You and Have Fun :clap::palm_tree:"
 		} else {
 			const nextSentQuestionOrder = nextQuestionOrder + 1
