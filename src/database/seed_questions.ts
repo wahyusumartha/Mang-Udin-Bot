@@ -30,4 +30,14 @@ const dbConfigurator = new DatabaseConfigurator(
 	dbJSON.dialect
 )
 
-SeedQuestionData(dbConfigurator)
+const sequelize = dbConfigurator.getSequelize()
+sequelize
+	.sync()
+	.then(async () => {
+		await SeedQuestionData()
+		process.exit()
+	})
+	.catch(async (error: any) => {
+		await sequelize.close()
+		process.exit()
+	})
